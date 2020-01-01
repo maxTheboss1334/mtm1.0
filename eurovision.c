@@ -85,18 +85,26 @@ Eurovision eurovisionCreate(){
     return eurovision;
 }
 
-
-//
-
-static bool checkStateValid(Eurovision eurovision, int state_id){
+static int findState(Eurovision eurovision , int stateId){
     struct states* temp_state = eurovision->State;
+    int index=0;
     while(temp_state != NULL){
-        if (temp_state->id == state_id)
-            return true;
-        else
+        if (temp_state->id == stateId)
+            return index;
+        else {
             temp_state = eurovision->State->next;
+            index++;
+        }
     }
-    return false;
+    return -1;
+}
+
+
+static bool checkStateExists(Eurovision eurovision, int state_id){
+    if (findState(eurovision,state_id) != -1)
+        return true
+    else
+        return false;
 }
 
 static bool checkJudgeExists (Eurovision eurovision, int judge_id){
@@ -153,7 +161,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,const cha
     int* tempResult = judgeResults;
     bool flag;
     while(tempResult != NULL){
-        flag = checkStateValid(eurovision, *tempResult);
+        flag = checkStateExists(eurovision, *tempResult);
         if (flag)
             break;
         else
